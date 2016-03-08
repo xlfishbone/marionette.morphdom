@@ -17,6 +17,12 @@ MorphDom | Normal | % Diff
 
 I did notice that in smaller views the difference was negligible if there was any at all. But on more complex views it was noticeable. 
 
+##Dependencies
+* [Marionette](https://github.com/marionettejs/backbone.marionette)
+  * ``` npm install backbone.marionette --save ```
+* [Morphdom](http://github.com/patrick-steele-idem/morphdom) 
+  * ```   npm install morphdom --save ```
+	 
 
 ##TODO
 Add to NPM and bower
