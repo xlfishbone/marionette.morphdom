@@ -19,7 +19,6 @@ I did notice that in smaller views the difference was negligible if there was an
 
 
 ##TODO
-Make UMD version
 Add to NPM and bower
 
 ##License
