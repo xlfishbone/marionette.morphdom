@@ -19,8 +19,8 @@
 
     //simple wrapper for native dom manipulation
     var $dom = (function () {
-        
-        function _dom(node) {           
+
+        function _dom(node) {
             if (node) {
                 this.node = node.cloneNode(true);
                 return this;
@@ -29,15 +29,31 @@
                 throw ("No node found. Node = " + node);
             }
 
-        };        
+        };
+
+        var _removeClass = function (el, remove) {
+            var newClassName = "";
+            var i;
+            var classes = el.className.split(" ");
+            for (i = 0; i < classes.length; i++) {
+                if (classes[i] !== remove) {
+                    newClassName += classes[i] + " ";
+                }
+            }
+            el.className = newClassName;
+        };
 
         _dom.prototype.append = function (child) {
             this.node.appendChild(child);
             return this.node;
         };
 
-        _dom.prototype.before = function (newItem, prevItem) {
-            this.node.insertBefore(newItem, prevItem);
+        _dom.prototype.before = function (newItem, classToFind) {
+            //find the prev item node and remote the marker class
+            var prevItem = this.node.getElementsByClassName(classToFind)[0];
+            _removeClass(prevItem, classToFind);
+
+            this.node.insertBefore(newItem, prevItem);                     
             return this.node;
         };
 
@@ -49,6 +65,8 @@
 
             return this.node.innerHTML;
         };
+
+        
 
         return _dom;
     })();
@@ -116,9 +134,18 @@
         }
 
         if (currentView) {
-            var toNode = new $dom(currentView.$el[0]).before(childView.el);
+            //add a class so we can find the current view after its been cloned. 
+            var uniqueClass = "_mdToClone" + Date.now();
+            currentView.$el.addClass(uniqueClass);
 
-            morphdom(currentView.el, toNode);
+            //clone the parent after our class marker was added
+            var parent = currentView.el.parentNode;
+            var toNode = new $dom(currentView.el.parentNode).before(childView.el, uniqueClass);
+            
+            //clean up our class marker
+            currentView.$el.removeClass(uniqueClass);
+
+            morphdom(parent, toNode);
             return true;
         }
         return false;
